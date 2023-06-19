@@ -1,0 +1,1333 @@
+C5P3_B4_GWRall4.txt 
+[1] "Wed Oct 27 17:59:24 2021"
+[1] "Wed Oct 27 18:03:49 2021"
+[1] "PC loadings"
+       [,1]  [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8] [,9]
+CO2    0.84 -0.42  0.21 -0.19  0.07 -0.09  0.15 -0.03 0.00
+CH4    0.82 -0.38  0.18 -0.15  0.12  0.33 -0.06  0.01 0.00
+N2O    0.95 -0.20  0.12 -0.08 -0.10 -0.15  0.02  0.05 0.00
+Ecc   -0.84 -0.50  0.13 -0.08  0.15 -0.06 -0.04  0.01 0.01
+Obl   -0.61 -0.39  0.27 -0.20 -0.60 -0.01 -0.05 -0.01 0.00
+Omega  0.78  0.44 -0.06  0.01 -0.43  0.06  0.01 -0.01 0.01
+POP    0.96 -0.07 -0.02  0.08  0.08 -0.18 -0.18 -0.02 0.00
+Volc   0.02 -0.09 -0.81 -0.58 -0.01 -0.01 -0.01  0.00 0.00
+Solar -0.16  0.54  0.55 -0.60  0.16 -0.03 -0.03  0.00 0.00
+[1] "% variance represented by all PCs"
+  CO2   CH4   N2O   Ecc   Obl Omega   POP  Volc Solar 
+  100   100   100   100   100   100   100   100   100 
+[1] "% variance represented by 5 PCs"
+  CO2   CH4   N2O   Ecc   Obl Omega   POP  Volc Solar 
+   97    89    97    99   100   100    94   100   100 
+  CO2   CH4   N2O   Ecc   Obl Omega   POP  Volc Solar 
+   97    89    97    99   100   100    94   100   100 
+[1] "% var tot represented by 5 PCs = 97.2"
+
+Dependent variable NPPtot 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 18:03:50 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+    Min      1Q  Median      3Q     Max 
+-1907.3   -77.4   -33.4    56.5  3228.1 
+
+   Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+   (Intercept) 120.1825     0.8987 133.725  < 2e-16 ***
+   PC1          76.9791     0.4050 190.054  < 2e-16 ***
+   PC2         -48.9061     0.8030 -60.906  < 2e-16 ***
+   PC3          25.8496     0.8445  30.611  < 2e-16 ***
+   PC4         -24.4298     0.9956 -24.538  < 2e-16 ***
+   PC5          -8.8655     1.1340  -7.818 5.45e-15 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 247.8 on 76008 degrees of freedom
+   Multiple R-squared: 0.3528
+   Adjusted R-squared: 0.3527 
+   F-statistic:  8286 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 4666736289
+   Sigma(hat): 247.7796
+   AIC:  1053791
+   AICc:  1053791
+   BIC:  977920.1
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                   Min.    1st Qu.     Median    3rd Qu.    Max.
+   Intercept   -3.79264   75.64217  113.46213  139.31776 367.327
+   PC1       -200.51813   42.55993   77.33172  102.72930 312.935
+   PC2       -822.31998  -53.52798  -41.24532  -29.57853  92.629
+   PC3       -733.25239   16.72266   25.67162   32.07470 129.642
+   PC4       -134.47910  -30.38684  -23.66848  -14.96354 526.378
+   PC5       -725.32708  -29.82032  -11.43470   -0.35239 151.221
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 1019333 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 1018838 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 947807.1 
+   Residual sum of squares: 2928282838 
+   R-square value:  0.5938842 
+   Adjusted R-square value:  0.5903543 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 18:16:58 
+- Est CO2<290 -263.1187470.2415-218.0309-202.3-207.6945-210.0532
+Dependent variable trt 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 18:17:15 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+     Min       1Q   Median       3Q      Max 
+-1457.68   -55.43   -26.24    -8.99  2324.61 
+
+   Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+   (Intercept)  39.3620     0.6224   63.24   <2e-16 ***
+   PC1          27.4240     0.2805   97.76   <2e-16 ***
+   PC2         -16.4244     0.5561  -29.53   <2e-16 ***
+   PC3           9.8047     0.5849   16.76   <2e-16 ***
+   PC4          -9.9996     0.6895  -14.50   <2e-16 ***
+   PC5         -10.7055     0.7854  -13.63   <2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 171.6 on 76008 degrees of freedom
+   Multiple R-squared: 0.1275
+   Adjusted R-squared: 0.1274 
+   F-statistic:  2221 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 2238513239
+   Sigma(hat): 171.6085
+   AIC:  997947.2
+   AICc:  997947.2
+   BIC:  922076.6
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                    Min.     1st Qu.      Median     3rd Qu.    Max.
+   Intercept -2.9873e-03  0.0000e+00  0.0000e+00  4.5001e+01 276.160
+   PC1       -9.4211e-04  0.0000e+00  0.0000e+00  2.2435e+01 284.540
+   PC2       -5.1618e+02 -2.3976e+01  0.0000e+00  0.0000e+00  31.869
+   PC3       -4.6254e+02  0.0000e+00  0.0000e+00  1.2512e+01  76.181
+   PC4       -6.4163e+01 -1.2746e+01  0.0000e+00  0.0000e+00 107.560
+   PC5       -1.1645e+02 -4.4941e+00  0.0000e+00  0.0000e+00  26.660
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 894245.3 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 893750.3 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 822719.7 
+   Residual sum of squares: 564866074 
+   R-square value:  0.7798314 
+   Adjusted R-square value:  0.7779178 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 18:30:36 
+- Est CO2<290 -97.38692160.9235-77.4477-68.78722-76.83243-75.6366
+Dependent variable tbe 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 18:30:52 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+    Min      1Q  Median      3Q     Max 
+-1650.7   -17.4    -9.3    -4.8  3189.8 
+
+   Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+   (Intercept)  12.7733     0.3550  35.984  < 2e-16 ***
+   PC1           6.8068     0.1600  42.548  < 2e-16 ***
+   PC2          -4.8742     0.3172 -15.369  < 2e-16 ***
+   PC3           2.3708     0.3335   7.108 1.19e-12 ***
+   PC4          -2.3822     0.3932  -6.058 1.38e-09 ***
+   PC5          -1.3350     0.4479  -2.980  0.00288 ** 
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 97.87 on 76008 degrees of freedom
+   Multiple R-squared: 0.02742
+   Adjusted R-squared: 0.02735 
+   F-statistic: 428.5 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 728015624
+   Sigma(hat): 97.86542
+   AIC:  912564.9
+   AICc:  912564.9
+   BIC:  836694.2
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                    Min.     1st Qu.      Median     3rd Qu.    Max.
+   Intercept   -0.038113    0.000000    1.052862   21.940255 139.541
+   PC1         -7.451142    0.000000    0.029233    8.897383 293.548
+   PC2        -71.380166   -6.265002   -0.166191    0.000000  79.073
+   PC3        -18.674796    0.000000    0.000000    3.055865  85.134
+   PC4       -114.593189   -3.554937    0.000000    0.000000  27.323
+   PC5       -666.409728   -0.633668    0.000000    0.000000  33.009
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 893369.9 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 892874.9 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 821844.3 
+   Residual sum of squares: 558398103 
+   R-square value:  0.2540154 
+   Adjusted R-square value:  0.2475314 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 18:45:38 
+- Est CO2<290 -19.0015143.60292-14.80962-12.06565-11.54841-15.56894
+Dependent variable tet 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 18:45:55 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+    Min      1Q  Median      3Q     Max 
+-949.69  -61.66  -21.03   41.71 1425.05 
+
+   Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+   (Intercept)  60.7870     0.5687  106.88   <2e-16 ***
+   PC1          37.3761     0.2563  145.82   <2e-16 ***
+   PC2         -26.0297     0.5081  -51.22   <2e-16 ***
+   PC3          15.4825     0.5344   28.97   <2e-16 ***
+   PC4         -16.0578     0.6300  -25.49   <2e-16 ***
+   PC5          -8.3225     0.7177  -11.60   <2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 156.8 on 76008 degrees of freedom
+   Multiple R-squared: 0.2513
+   Adjusted R-squared: 0.2512 
+   F-statistic:  5102 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 1868916587
+   Sigma(hat): 156.8028
+   AIC:  984230.3
+   AICc:  984230.3
+   BIC:  908359.6
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                   Min.    1st Qu.     Median    3rd Qu.    Max.
+   Intercept   -0.78882   17.51249   52.30458   97.25290 202.476
+   PC1         -6.31151    4.43012   26.95405   65.34669 146.529
+   PC2       -100.89651  -39.43731  -20.20740   -6.84999  48.377
+   PC3        -48.56026    4.12294   13.32742   25.74871  57.747
+   PC4       -208.01816  -26.51467  -15.11821   -5.07134   3.046
+   PC5       -353.10704  -19.80596   -6.96176   -1.14684  91.271
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 936165.9 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 935670.9 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 864640.3 
+   Residual sum of squares: 980511041 
+   R-square value:  0.6071936 
+   Adjusted R-square value:  0.6037794 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 18:59:59 
+- Est CO2<290 -118.9968241.3551-94.26187-91.87737-104.0667-80.80585
+Dependent variable bot 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 19:00:16 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+    Min      1Q  Median      3Q     Max 
+-817.56    6.13   11.59   30.01  881.90 
+
+   Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+   (Intercept) -15.3033     0.5381 -28.442  < 2e-16 ***
+   PC1          -0.8259     0.2425  -3.406 0.000659 ***
+   PC2           9.5985     0.4807  19.967  < 2e-16 ***
+   PC3          -4.2810     0.5056  -8.468  < 2e-16 ***
+   PC4           6.1786     0.5960  10.366  < 2e-16 ***
+   PC5          -0.9977     0.6789  -1.470 0.141691    
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 148.3 on 76008 degrees of freedom
+   Multiple R-squared: 0.007723
+   Adjusted R-squared: 0.007658 
+   F-statistic: 118.3 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 1672627262
+   Sigma(hat): 148.3401
+   AIC:  975795.5
+   AICc:  975795.5
+   BIC:  899924.9
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                    Min.     1st Qu.      Median     3rd Qu.    Max.
+   Intercept -2.1084e+02 -2.2602e+01  0.0000e+00  1.0247e-02 144.568
+   PC1       -1.9390e+02 -4.3176e+00  0.0000e+00  0.0000e+00  95.049
+   PC2       -7.9183e+02  0.0000e+00  0.0000e+00  1.7024e+01 252.521
+   PC3       -2.7832e+02 -4.9182e+00 -1.4477e-03  0.0000e+00 127.594
+   PC4       -3.3670e+02  0.0000e+00  1.3177e-03  8.0539e+00 506.855
+   PC5       -4.5640e+02 -1.3512e+01  0.0000e+00  1.3509e+00 195.056
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 951612.9 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 951117.9 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 880087.3 
+   Residual sum of squares: 1201452181 
+   R-square value:  0.2872452 
+   Adjusted R-square value:  0.2810501 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 19:12:08 
+- Est CO2<290 -25.12181-41.20772.805655-4.92579115.41523-7.441115
+Dependent variable teg 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 19:12:25 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+    Min      1Q  Median      3Q     Max 
+-893.98  -64.02  -25.14   66.82 1306.82 
+
+   Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+   (Intercept)  54.3864     0.4899  111.01   <2e-16 ***
+   PC1          33.9610     0.2208  153.81   <2e-16 ***
+   PC2         -18.4192     0.4377  -42.08   <2e-16 ***
+   PC3          11.0674     0.4603   24.04   <2e-16 ***
+   PC4          -9.8982     0.5427  -18.24   <2e-16 ***
+   PC5          -9.3364     0.6182  -15.10   <2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 135.1 on 76008 degrees of freedom
+   Multiple R-squared: 0.259
+   Adjusted R-squared: 0.259 
+   F-statistic:  5313 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 1386780068
+   Sigma(hat): 135.0712
+   AIC:  961549.6
+   AICc:  961549.6
+   BIC:  885679
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                    Min.     1st Qu.      Median     3rd Qu.    Max.
+   Intercept  -47.670791    0.532540   29.727529  116.879842 150.332
+   PC1         -1.111112    0.069889   15.504189   74.291900 245.137
+   PC2        -97.013089  -38.370425   -6.029781   -0.067411 382.187
+   PC3        -62.582354    0.021111    4.619412   26.856816 128.208
+   PC4       -146.412773  -26.247505   -2.127633    0.000000  60.522
+   PC5       -550.666163  -35.538831   -6.874184   -0.209672 600.060
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 883870.6 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 883375.6 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 812345 
+   Residual sum of squares: 492800530 
+   R-square value:  0.7366819 
+   Adjusted R-square value:  0.7343932 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 19:23:42 
+- Est CO2<290 -118.9504203.1266-82.84384-84.88434-79.69313-82.67952
+Dependent variable trg4 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 19:23:59 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+     Min       1Q   Median       3Q      Max 
+-1418.48   -38.02   -16.99    -5.55  2060.96 
+
+   Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+   (Intercept)  26.1662     0.4913   53.26   <2e-16 ***
+   PC1          17.0129     0.2214   76.83   <2e-16 ***
+   PC2         -11.5208     0.4390  -26.24   <2e-16 ***
+   PC3           8.5159     0.4617   18.45   <2e-16 ***
+   PC4          -8.5405     0.5443  -15.69   <2e-16 ***
+   PC5         -14.8679     0.6200  -23.98   <2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 135.5 on 76008 degrees of freedom
+   Multiple R-squared: 0.09256
+   Adjusted R-squared: 0.0925 
+   F-statistic:  1551 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 1394818774
+   Sigma(hat): 135.4621
+   AIC:  961989
+   AICc:  961989
+   BIC:  886118.3
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                  Min.   1st Qu.    Median   3rd Qu.     Max.
+   Intercept  -13.7616    0.0000    0.0000   44.8873 190.2878
+   PC1         -1.7488    0.0000    0.0000   21.3060 113.9172
+   PC2       -275.6875  -19.5227    0.0000    0.0000   2.1778
+   PC3       -421.3348    0.0000    0.0000   14.8917  47.5869
+   PC4        -51.5315  -14.0109    0.0000    0.0000 160.8996
+   PC5       -127.5876  -14.4401    0.0000    0.0000   9.9921
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 915254.4 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 914759.4 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 843728.8 
+   Residual sum of squares: 744693800 
+   R-square value:  0.5155189 
+   Adjusted R-square value:  0.5113079 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 19:35:07 
+- Est CO2<290 -54.01868105.459-34.2857-37.85704-36.79763-36.53881
+Dependent variable wds 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 19:35:23 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+    Min      1Q  Median      3Q     Max 
+-465.33  -24.32   -7.13   27.51  514.83 
+
+   Coefficients:
+               Estimate Std. Error  t value Pr(>|t|)    
+   (Intercept)  70.8803     0.2427  291.996  < 2e-16 ***
+   PC1          41.6444     0.1094  380.664  < 2e-16 ***
+   PC2         -36.1979     0.2169 -166.902  < 2e-16 ***
+   PC3          19.9060     0.2281   87.275  < 2e-16 ***
+   PC4         -20.5897     0.2689  -76.570  < 2e-16 ***
+   PC5           1.1292     0.3063    3.687 0.000227 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 66.93 on 76008 degrees of freedom
+   Multiple R-squared: 0.7102
+   Adjusted R-squared: 0.7102 
+   F-statistic: 3.725e+04 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 340446624
+   Sigma(hat): 66.92424
+   AIC:  854789.4
+   AICc:  854789.4
+   BIC:  778918.7
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                   Min.    1st Qu.     Median    3rd Qu.    Max.
+   Intercept  -14.16092   60.66429   73.12372   83.87185 118.622
+   PC1         -0.42099   34.33078   44.66298   52.18053 152.550
+   PC2       -169.93221  -44.84063  -36.84872  -29.63033 250.010
+   PC3       -156.28581   17.11865   21.59755   25.16815 145.082
+   PC4        -71.95594  -25.77793  -22.24094  -16.99717  38.718
+   PC5       -314.83948   -3.34824    0.37730    4.69149 397.641
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 789649.1 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 789154.1 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 718123.5 
+   Residual sum of squares: 142675967 
+   R-square value:  0.8785425 
+   Adjusted R-square value:  0.8774868 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 19:47:27 
+- Est CO2<290 -118.4335289.769-111.9985-109.1681-136.4769-96.79323
+Dependent variable tug 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 19:47:43 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+    Min      1Q  Median      3Q     Max 
+-577.42    2.50    3.56    6.64  632.23 
+
+   Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+   (Intercept) -4.17855    0.22187 -18.834  < 2e-16 ***
+   PC1         -2.98052    0.09999 -29.808  < 2e-16 ***
+   PC2          1.12809    0.19823   5.691 1.27e-08 ***
+   PC3         -1.59913    0.20847  -7.671 1.73e-14 ***
+   PC4          1.90640    0.24577   7.757 8.82e-15 ***
+   PC5          5.38980    0.27995  19.252  < 2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 61.17 on 76008 degrees of freedom
+   Multiple R-squared: 0.01822
+   Adjusted R-squared: 0.01816 
+   F-statistic: 282.1 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 284404192
+   Sigma(hat): 61.16837
+   AIC:  841117.4
+   AICc:  841117.4
+   BIC:  765246.7
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                    Min.     1st Qu.      Median     3rd Qu.   Max.
+   Intercept -9.8822e+01  0.0000e+00  0.0000e+00  4.4938e-01 414.03
+   PC1       -6.6296e+02 -5.1155e+00 -3.2423e-01  0.0000e+00 248.33
+   PC2       -1.0099e+03 -1.4960e+00  0.0000e+00  0.0000e+00 920.02
+   PC3       -1.1277e+02 -1.0850e+00 -5.4319e-02  0.0000e+00 689.55
+   PC4       -9.8459e+02  0.0000e+00  6.7829e-02  1.7692e+00 260.47
+   PC5       -1.9726e+03  0.0000e+00  3.7590e-01  1.1961e+01 107.90
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 827052.8 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 826557.8 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 755527.2 
+   Residual sum of squares: 233373336 
+   R-square value:  0.1943816 
+   Adjusted R-square value:  0.1873793 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 19:58:56 
+- Est CO2<290 10.20418-16.012780.5057641.806530.72869981.482627
+Dependent variable AET 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 19:59:12 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+    Min      1Q  Median      3Q     Max 
+-990.17  -17.36   -4.55   14.69  854.50 
+
+   Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+   (Intercept)   5.7755     0.2344  24.639  < 2e-16 ***
+   PC1           5.2185     0.1056  49.398  < 2e-16 ***
+   PC2           1.9950     0.2094   9.526  < 2e-16 ***
+   PC3           2.0574     0.2202   9.341  < 2e-16 ***
+   PC4          -1.2789     0.2597  -4.925 8.44e-07 ***
+   PC5         -15.6461     0.2958 -52.899  < 2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 64.63 on 76008 degrees of freedom
+   Multiple R-squared: 0.0668
+   Adjusted R-squared: 0.06674 
+   F-statistic:  1088 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 317457646
+   Sigma(hat): 64.62519
+   AIC:  849475
+   AICc:  849475
+   BIC:  773604.3
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                   Min.    1st Qu.     Median    3rd Qu.    Max.
+   Intercept  -38.19409   -4.84361    3.08414   12.04320  98.639
+   PC1        -59.52984   -1.00832    4.69431   12.76881  61.662
+   PC2       -280.13594   -1.83781    3.42493   10.31707 155.219
+   PC3       -287.88526   -0.99567    0.78704    4.19427 365.532
+   PC4       -164.41196   -3.66632   -0.34470    1.41485 285.802
+   PC5       -192.40425  -29.15970  -19.32771   -7.97350  90.599
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 830377.3 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 829882.2 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 758851.6 
+   Residual sum of squares: 243806235 
+   R-square value:  0.2833054 
+   Adjusted R-square value:  0.2770761 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 20:10:34 
+- Est CO2<290 -24.5545715.195666.588097-4.6136218.1391370.2534501
+Dependent variable MTCO 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 20:10:51 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+     Min       1Q   Median       3Q      Max 
+-30.0613  -0.4761  -0.0421   0.5138  18.2823 
+
+   Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+   (Intercept)  0.632390   0.005209  121.39   <2e-16 ***
+   PC1          0.715692   0.002348  304.83   <2e-16 ***
+   PC2         -0.178550   0.004654  -38.36   <2e-16 ***
+   PC3          0.243285   0.004895   49.70   <2e-16 ***
+   PC4         -0.254642   0.005771  -44.13   <2e-16 ***
+   PC5         -0.635338   0.006573  -96.65   <2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 1.436 on 76008 degrees of freedom
+   Multiple R-squared: 0.5873
+   Adjusted R-squared: 0.5873 
+   F-statistic: 2.163e+04 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 156799.4
+   Sigma(hat): 1.436253
+   AIC:  270770.3
+   AICc:  270770.3
+   BIC:  194899.6
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                   Min.    1st Qu.     Median    3rd Qu.    Max.
+   Intercept  -1.581456   0.296154   0.699148   0.808272  1.4799
+   PC1         0.396003   0.572350   0.651716   0.979294  5.9240
+   PC2       -18.187827  -0.195421  -0.149165  -0.011818 21.3438
+   PC3       -18.116544   0.184063   0.210736   0.284915 15.1359
+   PC4       -21.431911  -0.294302  -0.215462  -0.185487 22.3124
+   PC5       -10.183842  -1.557912  -0.332340  -0.204620  2.1179
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 228613.7 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 228118.7 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 157088.1 
+   Residual sum of squares: 88911.88 
+   R-square value:  0.7659689 
+   Adjusted R-square value:  0.7639347 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 20:22:35 
+- Est CO2<290 -3.1044943.281709-1.296599-1.396355-1.378632-1.2229
+Dependent variable MTWA 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 20:22:51 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+     Min       1Q   Median       3Q      Max 
+-11.7593  -0.4828  -0.1513   0.4970  12.6826 
+
+   Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+   (Intercept)  1.121863   0.003753  298.90   <2e-16 ***
+   PC1          0.645900   0.001692  381.85   <2e-16 ***
+   PC2         -0.389750   0.003353 -116.22   <2e-16 ***
+   PC3          0.281317   0.003527   79.77   <2e-16 ***
+   PC4         -0.294047   0.004158  -70.72   <2e-16 ***
+   PC5         -0.506773   0.004736 -107.01   <2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 1.035 on 76008 degrees of freedom
+   Multiple R-squared: 0.7056
+   Adjusted R-squared: 0.7055 
+   F-statistic: 3.643e+04 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 81390.82
+   Sigma(hat): 1.034777
+   AIC:  220927.6
+   AICc:  220927.6
+   BIC:  145056.9
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                  Min.   1st Qu.    Median   3rd Qu.    Max.
+   Intercept  -0.42784   0.95196   1.12294   1.29541  4.2479
+   PC1        -5.01110   0.59743   0.67823   0.72828  2.3665
+   PC2       -24.99941  -0.50413  -0.37340  -0.25500  0.8861
+   PC3        -9.92429   0.22034   0.29969   0.35011  1.2077
+   PC4        -2.90585  -0.36298  -0.31464  -0.22788 17.2146
+   PC5       -15.83758  -0.78802  -0.60414  -0.20851  1.0376
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 204366.8 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 203871.7 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 132841.2 
+   Residual sum of squares: 64629.2 
+   R-square value:  0.7661907 
+   Adjusted R-square value:  0.7641584 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 20:33:34 
+- Est CO2<290 -1.9929494.00648-1.152817-1.180896-1.114259-1.150002
+Dependent variable E/PE 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 20:33:50 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+    Min      1Q  Median      3Q     Max 
+-74.309  -1.630  -0.166   2.255  49.147 
+
+   Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+   (Intercept)  0.39187    0.02269  17.270  < 2e-16 ***
+   PC1          0.02604    0.01023   2.546   0.0109 *  
+   PC2         -0.09699    0.02027  -4.784 1.72e-06 ***
+   PC3          0.23113    0.02132  10.841  < 2e-16 ***
+   PC4         -0.22528    0.02514  -8.963  < 2e-16 ***
+   PC5         -0.60181    0.02863 -21.020  < 2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 6.256 on 76008 degrees of freedom
+   Multiple R-squared: 0.008726
+   Adjusted R-squared: 0.008661 
+   F-statistic: 133.8 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 2974572
+   Sigma(hat): 6.255632
+   AIC:  494471
+   AICc:  494471
+   BIC:  418600.3
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                   Min.    1st Qu.     Median    3rd Qu.    Max.
+   Intercept  -5.695218  -0.406405   0.385059   1.274327  5.4806
+   PC1        -5.655573  -0.345205  -0.088855   0.472145 12.2235
+   PC2       -68.128231  -0.366271  -0.062384   0.236069 42.6120
+   PC3       -72.614330   0.079431   0.236390   0.411122 22.8261
+   PC4       -33.465311  -0.473254  -0.268948  -0.030256 85.9111
+   PC5       -23.253163  -1.293221  -0.628983  -0.308836  3.2785
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 483136.9 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 482641.8 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 411611.2 
+   Residual sum of squares: 2530110 
+   R-square value:  0.1568425 
+   Adjusted R-square value:  0.149514 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 20:44:18 
+- Est CO2<290 0.670490.75478411.3087130.52141380.50135491.392452
+Dependent variable P-E 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 20:44:35 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+     Min       1Q   Median       3Q      Max 
+-1305.36   -12.27    -2.95     5.45  1051.52 
+
+   Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+   (Intercept)  5.60605    0.19938  28.117  < 2e-16 ***
+   PC1         -0.38155    0.08986  -4.246 2.18e-05 ***
+   PC2         -3.56094    0.17814 -19.990  < 2e-16 ***
+   PC3          1.41742    0.18734   7.566 3.89e-14 ***
+   PC4         -1.34680    0.22087  -6.098 1.08e-09 ***
+   PC5          2.21225    0.25158   8.793  < 2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 54.97 on 76008 degrees of freedom
+   Multiple R-squared: 0.007694
+   Adjusted R-squared: 0.007629 
+   F-statistic: 117.9 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 229681558
+   Sigma(hat): 54.96952
+   AIC:  824873
+   AICc:  824873
+   BIC:  749002.3
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                    Min.     1st Qu.      Median     3rd Qu.   Max.
+   Intercept  -96.853787    0.090390    2.619558    9.430554 100.62
+   PC1        -84.302583   -3.834607   -0.599236    1.076000 234.98
+   PC2       -489.004846   -6.108170   -2.057469   -0.013479 634.29
+   PC3       -591.523673   -0.181487    0.960662    3.990208 232.77
+   PC4       -394.962680   -4.309821   -0.759141    0.214395 557.56
+   PC5       -280.453242   -3.873548   -0.013239    4.540683 245.60
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 812056.2 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 811561.2 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 740530.6 
+   Residual sum of squares: 191588942 
+   R-square value:  0.1722679 
+   Adjusted R-square value:  0.1650734 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 20:56:39 
+- Est CO2<290 13.2487613.164821.731722-0.033714980.059823332.286886
+Dependent variable GDD5 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 20:56:55 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+     Min       1Q   Median       3Q      Max 
+-1417.97  -108.57   -37.98   114.75  2875.82 
+
+   Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+   (Intercept)  270.7250     0.8723  310.35   <2e-16 ***
+   PC1          190.6403     0.3931  484.92   <2e-16 ***
+   PC2          -82.6844     0.7794 -106.09   <2e-16 ***
+   PC3           71.5399     0.8196   87.28   <2e-16 ***
+   PC4          -74.7581     0.9663  -77.36   <2e-16 ***
+   PC5         -119.3535     1.1007 -108.43   <2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 240.5 on 76008 degrees of freedom
+   Multiple R-squared: 0.7814
+   Adjusted R-squared: 0.7814 
+   F-statistic: 5.435e+04 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 4396540798
+   Sigma(hat): 240.4997
+   AIC:  1049257
+   AICc:  1049257
+   BIC:  973386.5
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                  Min.   1st Qu.    Median   3rd Qu.   Max.
+   Intercept   -98.313   208.624   281.468   335.317 400.33
+   PC1        -315.307   145.539   193.500   237.364 517.26
+   PC2       -1245.492  -104.917   -87.996   -66.460 609.39
+   PC3       -1364.015    56.631    73.871    86.200 147.97
+   PC4        -318.533   -87.110   -77.519   -57.079 778.74
+   PC5       -1472.782  -141.425  -109.061   -79.017 938.24
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 1010755 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 1010260 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 939229.3 
+   Residual sum of squares: 2615804622 
+   R-square value:  0.8699647 
+   Adjusted R-square value:  0.8688345 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 21:08:50 
+- Est CO2<290 -693.27121063.801-350.6751-363.8522-397.2095-320.3052
+Dependent variable TANN 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 21:09:07 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+     Min       1Q   Median       3Q      Max 
+-18.4179  -0.3449  -0.1300   0.3287  12.7007 
+
+   Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+   (Intercept)  0.899125   0.003216  279.57   <2e-16 ***
+   PC1          0.694536   0.001449  479.18   <2e-16 ***
+   PC2         -0.234858   0.002873  -81.73   <2e-16 ***
+   PC3          0.242003   0.003022   80.08   <2e-16 ***
+   PC4         -0.251894   0.003563  -70.70   <2e-16 ***
+   PC5         -0.549935   0.004058 -135.51   <2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 0.8867 on 76008 degrees of freedom
+   Multiple R-squared: 0.7778
+   Adjusted R-squared: 0.7778 
+   F-statistic: 5.321e+04 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 59760.88
+   Sigma(hat): 0.886681
+   AIC:  197446
+   AICc:  197446
+   BIC:  121575.3
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                  Min.   1st Qu.    Median   3rd Qu.    Max.
+   Intercept  -0.63708   0.77647   0.87319   0.96256  2.0225
+   PC1         0.13341   0.62145   0.68856   0.82823  2.1196
+   PC2       -16.84835  -0.28314  -0.23119  -0.11684  1.6989
+   PC3       -18.66334   0.21862   0.24679   0.28340  2.8054
+   PC4        -1.85624  -0.29504  -0.25313  -0.22164 17.7837
+   PC5       -12.62362  -1.08370  -0.47286  -0.23287  1.7893
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 152004.1 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 151509 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 80478.46 
+   Residual sum of squares: 32453.56 
+   R-square value:  0.8793347 
+   Adjusted R-square value:  0.8782859 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 21:20:42 
+- Est CO2<290 -2.6760153.605319-1.184448-1.242462-1.222366-1.133132
+Dependent variable PANN 
+**************************************** 
+   ***********************************************************************
+   *                       Package   GWmodel                             *
+   ***********************************************************************
+   Program starts at: 2021-10-27 21:20:58 
+   Call:
+   gwr.basic(formula = y ~ PC1 + PC2 + PC3 + PC4 + PC5, data = data, 
+    bw = 8)
+
+   Dependent (y) variable:  y
+   Independent variables:  PC1 PC2 PC3 PC4 PC5
+   Number of data points: 76014
+   ***********************************************************************
+   *                    Results of Global Regression                     *
+   ***********************************************************************
+
+   Call:
+    lm(formula = formula, data = data)
+
+   Residuals:
+    Min      1Q  Median      3Q     Max 
+-908.15  -24.22   -5.62   22.99 1265.62 
+
+   Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+   (Intercept)   9.8156     0.2630  37.318  < 2e-16 ***
+   PC1           4.8870     0.1185  41.227  < 2e-16 ***
+   PC2          -1.3709     0.2350  -5.833 5.45e-09 ***
+   PC3           3.3392     0.2471  13.511  < 2e-16 ***
+   PC4          -2.4721     0.2914  -8.485  < 2e-16 ***
+   PC5         -13.3949     0.3319 -40.360  < 2e-16 ***
+
+   ---Significance stars
+   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+   Residual standard error: 72.52 on 76008 degrees of freedom
+   Multiple R-squared: 0.04543
+   Adjusted R-squared: 0.04536 
+   F-statistic: 723.4 on 5 and 76008 DF,  p-value: < 2.2e-16 
+   ***Extra Diagnostic information
+   Residual sum of squares: 399706127
+   Sigma(hat): 72.51525
+   AIC:  866987.5
+   AICc:  866987.5
+   BIC:  791116.8
+   ***********************************************************************
+   *          Results of Geographically Weighted Regression              *
+   ***********************************************************************
+
+   *********************Model calibration information*********************
+   Kernel function: bisquare 
+   Fixed bandwidth: 8 
+   Regression points: the same locations as observations are used.
+   Distance metric: Euclidean distance metric is used.
+
+   ****************Summary of GWR coefficient estimates:******************
+                   Min.    1st Qu.     Median    3rd Qu.   Max.
+   Intercept  -91.84285    0.28759    7.56670   16.12169 198.06
+   PC1        -66.70007   -2.23220    1.72329   13.38370 254.68
+   PC2       -408.98900   -4.33330   -0.05517    5.78005 557.07
+   PC3       -624.26645   -0.61035    2.83353    7.63130 189.56
+   PC4       -273.48152   -8.03132   -2.63335    1.13054 432.50
+   PC5       -356.45254  -28.01316  -17.69099   -5.27256 157.90
+   ************************Diagnostic information*************************
+   Number of data points: 76014 
+   Effective number of parameters (2trace(S) - trace(S'S)): 654.9965 
+   Effective degrees of freedom (n-2trace(S) + trace(S'S)): 75359 
+   AICc (GWR book, Fotheringham, et al. 2002, p. 61, eq 2.33): 846209.1 
+   AIC (GWR book, Fotheringham, et al. 2002,GWR p. 96, eq. 4.22): 845714.1 
+   BIC (GWR book, Fotheringham, et al. 2002,GWR p. 61, eq. 2.34): 774683.5 
+   Residual sum of squares: 300260158 
+   R-square value:  0.282923 
+   Adjusted R-square value:  0.2766903 
+
+   ***********************************************************************
+   Program stops at: 2021-10-27 21:32:42 
+- Est CO2<290 -13.565426.590086.626323-6.3334766.5264340.07648155[1] "Wed Oct 27 21:33:04 2021"
