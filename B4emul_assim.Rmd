@@ -1,0 +1,631 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+rm(list = ls())
+library(raster)
+library(rasterVis)
+library(rworldxtra)
+data(countriesHigh)
+library(rgdal)
+library(ggplot2)
+library(ggpubr)
+library(MASS)
+library(mcmc)
+library(fields)
+require(maps)
+load('C5P3_B4_GWRmod4.Rdata') 
+RDfile="B4emul_assim.RData"
+win1=c(-10,39,29,47.5)
+# boxC give the corners of the 10 geographical boxes of the med basin (following Medecc)
+# boxM centers of the boxes
+boxC=matrix(c(-10,6,29,37,1,   6,22,29,37,2,     22,39,29,37,3,
+              26,39,37,42,4,   4,26,37,44,5,    -10,4,37,44,6,
+              -4,5,44,47.5,7,  5,15.5,44,47.5,8,15.5,35,44,47.5,9,
+              0,7,42,45,10),5,10)
+boxM=matrix(c(-2,33,1,14,32.5,2,30.5,32,3,32.5,39.5,4,15,40.5,5,-7,40.5,6,0.5,46,7,10,46,8,25,46,9,5,43.5,10),3,10)
+colnames(boxC)=c('WMa','EMa','Lev','Ana','CMed','Ibe','Fra','Alp','Balk','Narb')
+colnames(boxM)=colnames(boxC)
+nbox=ncol(boxM)
+
+# PC forcings (to recover the global forcings from the five PCs)
+win= c(-20, 60, -5, 75)
+irg=8:16
+cc=coord[SB4[,4],]  # we go back to the gridpoints
+isel=which(cc[,1]> win[1] & cc[,1]<win[2] & cc[,2]> win[3] & cc[,2]<win[4])
+X=cbind(SB4[isel,irg])
+pcX=prcomp(X,scale.=T)
+npcX=5
+rgpc=lm(pcX$x[,1:npcX]~X)
+
+```
+
+Function MCMC LH()
+------------------
+```{r}
+LH=function(param) {
+# global variables : XXr, y, ii, boxc, boxp, boxCF 
+  LH=0
+  for (j in 1:6) {
+    if (param[j]<Rpar[1,j] | param[j]>Rpar[2,j]) {LH=-Inf}
+  }
+  if (LH==0) {
+    ii <<- ii+1
+    XXr[9:10]=param[1:2]
+    GZ=c(1,XXr %*% rgpc$coefficients)
+    Z <- matrix(NA,nbox,2)
+    for (j in 1:nbox) {
+      Z[j,] <- GZ %*% boxCF[j,,]
+    }
+    dT=param[3]; sdT=param[4]; LHT=-0.5*log(2*pi*sdT^2)
+    dP=param[5]; sdP=param[6]; LHP=-0.5*log(2*pi*sdP^2)
+    for (l in 1:nbox) {
+      Z[l,1]=Z[l,1]+dT
+#      LHT=LHT+dnorm(y[l,1],mean=Z[l,1],sd=sdT,log=T)
+      LHT=LHT-0.5*(y[l,1]-Z[l,1])^2/sdT^2
+      Z[l,2]=Z[l,2]+dP
+#      LHP=LHP+dnorm(y[l,2],mean=Z[l,2],sd=sdP,log=T)
+      LHP=LHP-0.5*(y[l,2]-Z[l,2])^2/sdP^2
+    }
+    LHT=LHT/nrow(y)
+    if(is.na(LHT))LHT=LHP
+    LHP=LHP/nrow(y)
+    if(is.na(LHP))LHP=LHT
+    LH=(LHT+LHP)/2
+    if(ii>100 & LH< (-10)) {LH=-Inf}
+    boxp[ii,1:9] <<- c(param[1:6],LHT,LHP,LH)
+    boxc[ii,,] <<- Z
+  }
+  return(LH)
+}
+```
+Assimilation part
+Reconstructed boxes  Rec[time,boxes,P/T] anomalies
+Simulated boxes PBm[slices/scenarios, boxes, 17 var] anomalies 
+Read forcings of the selected slices
+-------------------------------------------------------------
+```{r}
+Z=read.table(file='ClimR_slcc.txt')  # the paleo data to constrain the assimilation
+Rec2=array(NA, c(nrow(Z),ncol(Z)/2,2))
+Rec2[,,1]=as.matrix(Z[,1:10])
+Rec2[,,2]=as.matrix(Z[,11:20])
+dimnames(Rec2)[[1]]=rownames(Z)
+dimnames(Rec2)[[2]]=colnames(boxM)
+dimnames(Rec2)[[3]]=c('Tann','Pann')
+Rec0=Rec2
+Rec2[1:2,,1]=NA
+Rec2[3:8,,2]=NA
+
+# the drivers for the past and future scenarios
+Driv3 = read.table ('driv-proj10c.txt', header = TRUE,row.names=1)
+np3=nrow(Driv3)
+boxid=rep(NA,nbox)
+boxCF=array(NA,c(nbox,npcX+1,2))
+for (i in 1:nbox) {
+  dd=abs(boxM[1,i]-coordw[,1])+abs(boxM[2,i]-coordw[,2])
+  boxid[i]=which.min(dd)
+  boxCF[i,,]=LocCF[boxid[i],1:(npcX+1),16:17]
+}
+
+XX=c(rep(1,np3),unlist(Driv3))
+XX=matrix(XX,np3,ncol(Driv3)+1)
+colnames(XX)=c('Int',colnames(Driv3))
+rownames(XX)=rownames(Driv3)
+boxPP=array(NA,c(nrow(Rec2),9,3))
+boxCl=array(NA,c(nrow(Rec2),nbox,2,3))
+nbatch=1e+6; blen=20
+layout(matrix(1:9,3,3))
+op=par(mai=c(0.3,0.3,0.5, 0.2) )
+
+# loop on time slices
+for (i in 1:9) {
+  print(rownames(Rec2)[i])
+# metropolis
+  y=Rec2[i,,1:2]
+  param0=c(XX[i,c(9,11)],0,0.1,0,1)
+  dpar=c(XX[i,c(10,12)],2,5,20,80)
+  Rpar=rbind(pmax(param0-dpar,c(0.1,50,-2,0.1,-20,1)),param0+dpar)
+  XXr=XX[i,c(1:9,11)]
+  boxc=array(NA,c(nbatch*blen,nbox,2)); ii=0; boxp=matrix(NA,nbatch*blen,9)
+  out=metrop(LH,initial=param0,nbatch=nbatch,blen=1,scale=1)
+  print(out$accept)
+  boxc=array(NA,c(nbatch*blen,nbox,2)); ii=0; boxp=matrix(NA,nbatch*blen,9)
+  out=metrop(out,nbatch=nbatch,blen=blen,scale=1)  # scale petit = accept plus grand
+  print(out$accept)
+# plot time series
+  plot(1:nbatch,out$batch[,1],type='l',main=paste(rownames(Rec2)[i],':',colnames(Driv3)[8]))
+  plot(1:nbatch,out$batch[,2],type='l',main=paste(rownames(Rec2)[i],':',colnames(Driv3)[10]))
+  plot(1:nbatch,out$batch[,3],type='l',main=paste(rownames(Rec2)[i],': dT'))
+  plot(1:nbatch,out$batch[,4],type='l',main=paste(rownames(Rec2)[i],': sdT'))
+  plot(1:nbatch,out$batch[,5],type='l',main=paste(rownames(Rec2)[i],': dP'))
+  plot(1:nbatch,out$batch[,6],type='l',main=paste(rownames(Rec2)[i],': sdP'))
+  isel=seq(1,ii,blen)
+  lines(isel/blen,boxp[isel,8],col='blue')
+  LHH=boxp[,9]
+  plot(1:length(isel),LHH[isel],type='l',main=paste(rownames(Rec2)[i],': LH'))
+# print optimum results
+  LHmax=which.max(LHH)
+  print('Param LH max')
+  print(round(boxp[LHmax,],2))
+  print('Box Temp LHmax (obs/sim)')
+  print(t(cbind(y[,1],round(boxc[LHmax,,1],2))))
+  print('Box Precip LHmax (obs/sim)')
+  print(t(cbind(y[,2],round(boxc[LHmax,,2],2))))
+  sLH=quantile(LHH[isel],0.9)
+  isel2=isel[which(LHH[isel]>sLH)]
+# summaries
+  boxPP[i,,]=t(apply(boxp[isel2,],2,quantile,c(0.05,0.50,0.95)))
+  boxPP[i,,2]=boxp[which.max(LHH),]
+  for (j in 1:nbox) {
+    boxCl[i,j,,]=t(apply(boxc[isel2,j,],2,quantile,c(0.05,0.5,0.95)))
+    boxCl[i,j,,2]=boxc[LHmax,j,]
+  }
+  lim=range(c(y[,1],boxCl[i,,1,2]))
+  if(!is.na(lim[1])) {
+    plot(y[,1],boxCl[i,,1,2],main=paste('Tann Sim/Rec:',rownames(Rec2)[i]), xlim=lim,ylim=lim)
+    abline(a=0,b=1)
+  }
+  lim=range(c(y[,2],boxCl[i,,2,2]))
+  if(!is.na(lim[1])) {
+    plot(y[,2],boxCl[i,,2,2],main=paste('Pann Sim/Rec:',rownames(Rec2)[i]),xlim=lim,ylim=lim)
+   abline(a=0,b=1)
+  }
+}
+save.image(RDfile)
+```
+Graphic of simulations: Tann and Pann (all periods)
+---------------------------------------------------
+```{r}
+data <- data.frame (
+    x=as.vector(Rec2[,,1]),  
+    y=as.vector(boxCl[,,1,2]),
+    y1=as.vector(boxCl[,,1,1]),
+    y2=as.vector(boxCl[,,1,3])
+)
+rg1=lm(y~x,data)
+print(summary(rg1))
+gg1= ggplot(data) + 
+    geom_point(aes(x=x,y=y),size=2) +
+    geom_errorbar(aes(x=x,ymin=y1,ymax=y2),width=0) +
+    ylim(min(data$x,na.rm=T),max(data$x,na.rm=T)) +
+    geom_abline(intercept=rg1$coefficients[[1]],slope=rg1$coefficients[[2]],col='black') +
+    geom_abline(slope=1,intercept=0,col='blue') +
+    labs(title=paste('Mean Annual Temp. Anomalies',sep='')) +
+    xlab('Pollen Rec (°C)') + ylab('Simulations (°C)') +
+    geom_label(aes(x=-1,y=1.5,label=paste('R2=',round(summary(rg1)$r.squared,2)))) +
+    theme(axis.text=element_text(size=10),
+          axis.title=element_text(size=10,face="bold",color='black'),
+          title=element_text(size=11,face="bold",color='black'))
+
+# graphic of simulations: Pann (all periods)
+data <- data.frame (
+  x=as.vector(Rec2[,,2]),  
+  y=as.vector(boxCl[,,2,2]),
+  y1=as.vector(boxCl[,,2,1]),
+  y2=as.vector(boxCl[,,2,3])
+)
+rg2=lm(y~x,data)
+print(summary(rg2))
+gg2= ggplot(data) + 
+  geom_point(aes(x=x,y=y),size=2) +
+  geom_errorbar(aes(x=x,ymin=y1,ymax=y2),width=0) +
+  ylim(min(data$x,na.rm=T),max(data$x,na.rm=T)) +
+  geom_abline(intercept=rg2$coefficients[[1]],slope=rg2$coefficients[[2]],col='black') +
+  geom_abline(slope=1,intercept=0,col='blue') +
+  labs(title=paste('Total Annual Precip. Anomalies',sep='')) +
+  xlab('Pollen Rec (mm)') + ylab('Simulations (mm)') +
+  geom_label(aes(x=-75,y=50,label=paste('R2=',round(summary(rg2)$r.squared,2)))) +
+  theme(axis.text=element_text(size=10),
+        axis.title=element_text(size=10,face="bold",color='black'),
+        title=element_text(size=11,face="bold",color='black'))
+
+
+print(ggarrange(gg1,gg2,ncol = 2, nrow = 2,heights=c(8,1,8,1)))
+```
+Box Maps
+---------
+```{r}
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(rgeos)
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# maps of emulations
+nbc=dim(LocCF)[[3]]
+RecMap=array(NA,c(np3,nbox,nbc))
+dimnames(RecMap)[[1]]=rownames(Driv3)
+dimnames(RecMap)[[2]]=colnames(boxM)
+dimnames(RecMap)[[3]]=dimnames(LocCF)[[3]]
+Driv4=Driv3[,c(1:7,8,10)]
+Driv4[1:9,8:9]=boxPP[1:9,1:2,2]
+
+colnames(Driv4)[8:9]=c("Volc","Solar")
+dT=boxPP[,3,2] ; dT[c(10:np3)]=0
+dP=boxPP[,5,2] ; dP[c(10:np3)]=0
+
+X=c(rep(1,nrow(Driv4)),unlist(Driv4))
+X=matrix(X,nrow(Driv4),ncol(Driv4)+1)
+colnames(X)=c('Int',colnames(Driv4))
+rownames(X)=rownames(Driv4)
+GZ=X %*% rgpc$coefficients
+GZ=cbind(rep(1,nrow(GZ)),GZ)
+
+for (i in 1:nbox)  {   # loop on gridpoints
+  dd=abs(boxM[1,i]-coordw[,1])+abs(boxM[2,i]-coordw[,2])
+  idd=which.min(dd)
+  if(is.na(LocCF[idd,1,1])) {idd=order(dd)[2]}
+  cf=LocCF[idd,1:(npcX+1),]
+  RecMap[,i,]=GZ %*% cf
+}
+RecMap[,,16]=RecMap[,,16]+dT
+RecMap[,,17]=RecMap[,,17]+dP
+
+# graphics for the 9 first maps (past/present)
+fig=list()
+z=round(range(c(RecMap[1:9,,16],Rec0[1:9,,1])),1)
+Tlim=c(-max(abs(z)),max(abs(z)))
+z=round(range(c(RecMap[1:9,,17],Rec0[1:9,,2])))
+Plim=c(0,max(abs(z)))
+newgradc=colorRampPalette(c("dark blue", "blue", "cyan","white","yellow","orange", "red"))(64)
+for (k in 1:9)  {
+  P1=RecMap[k,,17]; P2=P1
+  P1[P1>0]=NA
+  P2[P2<0]=NA
+  OP1=Rec0[k,,2]; OP2=OP1
+  OP1[OP1>0]=NA
+  OP2[OP2<0]=NA
+
+  bb <- data.frame (
+    Longitude=boxM[1,],  
+    Latitude=boxM[2,],
+    Tann=round(RecMap[k,,16],1),
+    PannN =round(P1,0),
+    Pann =round(P2,0),
+    OTann=round(Rec0[k,,1],1),
+    OPannN =round(OP1,0),
+    OPann =round(OP2,0)
+  )
+  gg=ggplot(bb, aes(x=Longitude, y=Latitude)) +
+  #  scale_fill_gradient2(limits=Tlim,low="blue",mid="white",high="red") +
+    scale_fill_gradientn(limits=Tlim,colours=newgradc) +
+    scale_size(limits=Plim,range=c(2,6)) +
+    geom_sf(data=world,colour='grey',fill='white',inherit.aes = F) + 
+    coord_sf(xlim=c(win1[1],win1[2]),ylim=c(win1[3],win1[4]),expand = T) +
+    geom_point(aes(fill=Tann,size=Pann),shape=21) +
+    geom_point(aes(fill=Tann,size=abs(PannN)),shape=24) +
+    geom_point(aes(x=Longitude+2,fill=OTann,size=OPann),shape=21) +
+    geom_point(aes(x=Longitude+2,fill=OTann,size=abs(OPannN)),shape=24) +
+    labs(title=paste('Tann/Pann (Obs/Emul):',rownames(Driv4)[k])) +
+    xlab('') + ylab('') +
+    theme(axis.text=element_text(size=8),
+          axis.title=element_text(size=8),
+          title=element_text(size=8),
+          panel.border = element_rect(linetype = "solid", fill = NA),
+          plot.margin=unit(c(0,0,0,0),"lines"))
+    
+  fig[[k]]=gg
+}
+
+# graphics for the last maps (future)
+z=round(range(c(RecMap[9:np3,,16],Rec0[9:np3,,1]),na.rm=T),1)
+Tlim=c(0,max(z,na.rm=T))
+z=round(range(c(RecMap[9:np3,,17],Rec0[9:np3,,2]),na.rm=T))
+Plim=c(0,max(abs(z),na.rm=T))
+newgradc2=colorRampPalette(c("white","yellow","orange","red","dark red"))(64)
+for (k in 10:np3)  {
+  P1=RecMap[k,,17]; P2=P1
+  P1[P1>0]=NA
+  P2[P2<0]=NA
+
+  bb <- data.frame (
+    Longitude=boxM[1,],  
+    Latitude=boxM[2,],
+    Tann=round(RecMap[k,,16],1),
+    PannN =round(P1,0),
+    Pann =round(P2,0)
+  )
+  
+  gg=ggplot(bb, aes(x=Longitude, y=Latitude)) +
+    scale_fill_gradientn(limits=Tlim,colours=newgradc2) +
+    scale_size(limits=Plim,range=c(2,6)) +
+    geom_sf(data=world,colour='grey',fill='white',inherit.aes = F) + 
+    coord_sf(xlim=c(win1[1],win1[2]),ylim=c(win1[3],win1[4]),expand = T) +
+    geom_point(aes(fill=Tann,size=Pann),shape=21) +
+    geom_point(aes(fill=Tann,size=abs(PannN)),shape=24) +
+    labs(title=paste('Tann/Pann (Emul):',rownames(Rec0)[k])) +
+    xlab('') + ylab('') +
+    theme(axis.text=element_text(size=8),
+          axis.title=element_text(size=8),
+          title=element_text(size=8),
+          panel.border = element_rect(linetype = "solid", fill = NA),
+          plot.margin=unit(c(0,0,0,0),"lines"))
+    
+  fig[[k]]=gg
+}
+
+  
+figure=ggarrange(fig[[1]],fig[[2]],fig[[3]],fig[[4]],fig[[5]],fig[[6]],fig[[7]],fig[[8]],fig[[9]],ncol = 3, nrow = 3, legend="right",common.legend=T)
+annotate_figure(figure,bottom=text_grob("Circles = positive anom P / Triangles = negative anom P"))
+figure2=ggarrange(fig[[10]],fig[[11]],fig[[12]],fig[[13]],fig[[14]],fig[[15]],ncol = 2, nrow = 3, legend="right",common.legend=T)
+annotate_figure(figure2,bottom=text_grob("Circles = positive anom P / Triangles = negative anom P"))
+
+```
+Grid Maps for viticulture
+-------------------------
+```{r}
+idv=c(26:34,18:25)
+nbc=dim(LocCF)[[3]]
+ng=dim(LocCF)[[1]]
+WMap=array(NA,c(np3,ng,nbc))
+dimnames(WMap)[[1]]=rownames(Driv3)
+dimnames(WMap)[[2]]=dimnames(LocCF)[[1]]
+dimnames(WMap)[[3]]=dimnames(LocCF)[[3]]
+Driv5=Driv3[,c(1:7,8,10)]
+Driv5[1:9,8:9]=boxPP[1:9,1:2,2]
+colnames(Driv5)[8:9]=c("Volc","Solar")
+
+X=c(rep(1,nrow(Driv5)),unlist(Driv5))
+X=matrix(X,nrow(Driv5),ncol(Driv5)+1)
+colnames(X)=c('Int',colnames(Driv5))
+rownames(X)=rownames(Driv5)
+GZ=X %*% rgpc$coefficients
+GZ=cbind(rep(1,nrow(GZ)),GZ)
+for (i in 1:ng)  {   # loop on gridpoints
+  cf=LocCF[i,1:(npcX+1),]
+  WMap[,i,]=GZ %*% cf
+  dd=abs(coordw[i,1]-coord[,1])+abs(coordw[i,2]-coord[,2])
+  idd=which.min(dd)
+  WMap[,i,]=scale(WMap[,i,],center=-C0[idd,idv],scale=F)
+}
+
+# correction of dT, dP by time slice
+dP=boxPP[,5,2]; dP[3:8]=0; dP[10:17]=dP[9]
+dT=boxPP[,3,2]; dT[1:2]=0; dT[10:17]=dT[9]
+
+for (k in 1:np3) {
+  WMap[k,,c(11,12,16)]=WMap[k,,c(11,12,16)]+dT[k]
+  WMap[k,,c(10,14,17)]=WMap[k,,c(10,14,17)]+dP[k]
+}
+
+
+newgradc3=colorRampPalette(c("white","yellow","orange","orange","orange","red","red","dark red","dark red"))(16)
+fig1=list()
+fig2=list()
+# Tm=0.006*Tc^2 + 1.316*Tc-21.9  Prentice et al biome1 paper
+# for Tc=3.5, Tm=-17.2 
+Vix=matrix(NA,ng,np3)
+for (k in 1:np3) {
+  Vindx=data.frame(
+    x=coordw[,2],
+    Inpp=(pmin(1000,pmax(500,WMap[k,,1]))-500)/500,
+    Itr=1-pmin(10,pmax(0,WMap[k,,2]))/10,
+    Ipr=(pmin(800,pmax(400,WMap[k,,17]))-400)/400,  
+    Itw=(pmin(23,pmax(18,WMap[k,,12]))-18)/5,      
+    Itc=(pmin(12,pmax(3,WMap[k,,11]))-3)/9,        
+    Ialpha=(pmin(60,pmax(30,WMap[k,,13]))-30)/30
+  )
+  Vindx$Prob=Vindx$Inpp*Vindx$Itr*Vindx$Ipr*Vindx$Itw*Vindx$Itc*Vindx$Ialpha
+  Vix[,k]=Vindx$Prob
+  Opt=quantile(Vindx$x[Vindx$Prob>0.01],c(0.05,0.5,0.95),na.rm=T)
+  Opt[2]=mean(Vindx$x[Vindx$Prob>0.01],na.rm=T)
+  cat(rownames(Rec0)[k],round(Opt,1),'\n')
+
+# graphics Vindx versus Lat     
+gg=ggplot(Vindx) + 
+  geom_point(aes(y=x,x=Prob),colour='black',size=0.1) +
+  geom_hline(yintercept=Opt,colour='orange',size=0.5) +
+  ylim(30,55) +
+  labs(title=paste('Vit. Index:',rownames(Rec0)[k])) +
+  ylab('Latitude') +
+  xlab('Index') +
+  theme(axis.text=element_text(size=8,angle=0),
+  axis.title=element_text(size=8,face="bold",color='black'),
+  title=element_text(size=8,face="bold",color='black'))
+  fig1[[k]]=gg
+
+# distribution maps
+  bb <- data.frame (
+    Longitude=coordw[,1],  
+    Latitude=coordw[,2],
+    Prob=Vindx$Prob
+  )
+  zmax=0.6
+  bb$Prob[bb$Prob>zmax]=zmax
+  gg=ggplot(bb, aes(x=Longitude, y=Latitude)) +
+    scale_fill_gradientn(limits=c(0,zmax),colours=newgradc3,na.value='white') +
+    geom_raster(aes(fill=Prob)) +
+    geom_sf(data=world,colour='grey',fill=NA,inherit.aes = F) + 
+    coord_sf(xlim=c(-10,50),ylim=c(30,55),expand = T) +
+    labs(title=paste('Vit. Index:',rownames(Rec0)[k])) +
+    theme(axis.text=element_text(size=8),
+          axis.title=element_text(size=8),
+          title=element_text(size=8,face="bold"),
+          panel.border = element_rect(linetype = "solid", fill = NA),
+          plot.margin=unit(c(0,0,0,0),"lines"))
+    
+  fig2[[k]]=gg
+}
+
+ff1=ggarrange(fig2[[1]],fig2[[2]],fig2[[3]],fig2[[4]],fig2[[5]],fig2[[6]],fig2[[7]],fig2[[8]], fig2[[9]], ncol = 3, nrow = 3, legend="right",common.legend=T)
+print(ff1)
+ff2=ggarrange(fig2[[10]],fig2[[11]],fig2[[12]],fig2[[13]],fig2[[14]],fig2[[15]], ncol = 2, nrow = 3, legend="right",common.legend=T)
+print(ff2)
+
+```
+
+Regional time series for viticulture
+------------------------------------
+```{r}
+NPPb=matrix(NA,nbox,np3)
+colnames(NPPb)=rownames(Driv5)
+rownames(NPPb)=colnames(boxC)
+for (k in 1:np3) {
+
+  for (j in 1:nbox) {
+    winb=boxC[1:4,j]
+    iselb=which(coordw[,1]>=winb[1] & coordw[,1]<=winb[2] & coordw[,2]>=winb[3] & coordw[,2]<=winb[4])
+    isel=rep(1,ng)
+    Z=(Vix[,k]>0.025)
+    NPPb[j,k]=sum(Z[iselb],na.rm=T)
+  }
+}
+sc=NPPb[,9]/100
+sc[sc<0.01] = length(iselb)/100
+NPPb1=round(t(scale(t(NPPb[,1:np3]),center=F,scale=sc)),1)
+
+codec=c('grey','black','blue','cyan','red','orange','green','magenta','aquamarine3','darkgreen')
+data <- data.frame (
+  x=factor(colnames(NPPb1),levels=colnames(NPPb1)),  
+  x0=1:np3,
+  y1=NPPb1[1,],
+  y2=NPPb1[2,],
+  y3=NPPb1[3,],
+  y4=NPPb1[4,],
+  y5=NPPb1[5,],
+  y6=NPPb1[6,],
+  y7=NPPb1[7,],
+  y8=NPPb1[8,],
+  y9=NPPb1[9,],
+  y10=NPPb1[10,]
+)
+#ii=c(9,10,11,4,1,11,13,12,9,12)
+ii=c(1,4,1,1,2,7,7,3,2,4)
+legend <- data.frame (
+  x=ii,
+  y=diag(NPPb1[1:10,ii]),
+  label=rownames(NPPb),
+  col=factor(codec,levels=codec)
+)
+gg1=ggplot(data) + 
+  geom_segment(aes(x=x,y=y1,xend=x,yend=y1),colour=codec[1],size=2) +
+  geom_path(aes(x=x0,y=y1),colour=codec[1],size=1) +
+  geom_segment(aes(x=x,y=y2,xend=x,yend=y2),colour=codec[2],size=2) +
+  geom_path(aes(x=x0,y=y2),colour=codec[2],size=1) +
+  geom_segment(aes(x=x,y=y3,xend=x,yend=y3),colour=codec[3],size=2) +
+  geom_path(aes(x=x0,y=y3),colour=codec[3],size=1) +
+  geom_segment(aes(x=x,y=y4,xend=x,yend=y4),colour=codec[4],size=2) +
+  geom_path(aes(x=x0,y=y4),colour=codec[4],size=1) +
+  geom_segment(aes(x=x,y=y5,xend=x,yend=y5),colour=codec[5],size=2) +
+  geom_path(aes(x=x0,y=y5),colour=codec[5],size=1) +
+  geom_segment(aes(x=x,y=y6,xend=x,yend=y6),colour=codec[6],size=2) +
+  geom_path(aes(x=x0,y=y6),colour=codec[6],size=1) +
+  geom_segment(aes(x=x,y=y7,xend=x,yend=y7),colour=codec[7],size=2) +
+  geom_path(aes(x=x0,y=y7),colour=codec[7],size=1) +
+  geom_segment(aes(x=x,y=y8,xend=x,yend=y8),colour=codec[8],size=2) +
+  geom_path(aes(x=x0,y=y8),colour=codec[8],size=1) +
+  geom_segment(aes(x=x,y=y9,xend=x,yend=y9),colour=codec[9],size=2) +
+  geom_path(aes(x=x0,y=y9),colour=codec[9],size=1) +
+  geom_segment(aes(x=x,y=y10,xend=x,yend=y10),colour=codec[10],size=2) +
+  geom_path(aes(x=x0,y=y10),colour=codec[10],size=1) + 
+  geom_label(data=legend,aes(x=x,y=y,label=label),show.legend=F,inherit.aes = F) +
+  ylim(min(NPPb1),max(NPPb1)) +
+  labs(title='Proportion of viticulture area by region (vs Present)') +
+  xlab('Time Period + forcing') +
+  ylab('% pixels') +
+  theme(axis.text=element_text(size=12,angle=45),
+  axis.title=element_text(size=12,face="bold",color='black'),
+  title=element_text(size=14,face="bold",color='black'))
+
+print(gg1)
+
+# graphics by latitude bands
+data <- data.frame (
+  x=factor(colnames(NPPb),levels=colnames(NPPb)),  
+  x0=1:np3,
+  y1=apply(NPPb[1:3,],2,sum),
+  y2=apply(NPPb[4:6,],2,sum),
+  y3=apply(NPPb[7:9,],2,sum),
+  y4=NPPb[6,],
+  y5=NPPb[7,],
+  y6=NPPb[4,]
+)
+gg2=ggplot(data) + 
+  geom_segment(aes(x=x,y=y1,xend=x,yend=y1),colour='red',size=0.5) +
+  geom_path(aes(x=x0,y=y1),colour='red',size=2) +
+  geom_path(aes(x=x0,y=y2),colour='green',size=2) +
+  geom_path(aes(x=x0,y=y3),colour='blue',size=2) +
+  geom_path(aes(x=x0,y=y4),colour='orange',size=1) +
+  geom_path(aes(x=x0,y=y5-10),colour='dark green',size=1) +
+  geom_path(aes(x=x0,y=y6+10),colour='cyan',size=1) +
+  geom_label(x=2,y=420,label='37-44°N') +
+  geom_label(x=2,y=170,label='29-37°N') +
+  geom_label(x=4,y=100,label='44-48°N') +
+  geom_label(x=11,y=70,label='France') +
+  geom_label(x=10,y=220,label='Iberia') +
+  geom_label(x=12,y=120,label='Anatolia') +
+  ylim(0,610) +
+  labs(title='Viticulture area by latitude band') +
+  xlab('Time Period + forcing') +
+  ylab('Nb pixels') +
+  theme(axis.text=element_text(size=12,angle=45),
+  axis.title=element_text(size=12,face="bold",color='black'),
+  title=element_text(size=14,face="bold",color='black'))
+
+print(gg2)
+
+save.image(RDfile)
+
+```
+verification with old world atlas (Cook) last 2000 years
+--------------------------------------------------------
+```{r}
+require(ncdf4)
+require(chron)
+fich="owda.nc"
+cl.nc=nc_open(fich)
+lon=ncvar_get(cl.nc,varid="lon")
+lat=ncvar_get(cl.nc,varid="lat")
+an=ncvar_get(cl.nc,varid="time")
+n=length(an)
+data=ncvar_get(cl.nc,varid="pdsi")
+layout(matrix(1:4,2,2))
+op=par(mai=c(0.2,0.4,0.5, 0.4) )
+zl=20
+ref=(WMap[8,,13]+WMap[9,,13])/2
+# time series
+zz=apply(data,1,mean,na.rm=T)
+dd=data.frame(t=0:2012,y=zz)
+zf=predict(loess(y~t,dd,span=0.1))
+plot(dd$t,zf,type='l')
+# 2000 BP
+z=t(apply(data[1:50,,],c(2,3),mean,na.rm=T))
+image.plot(lon,lat,z,col=rainbow(20),main=paste('PDSI', '2000 BP'), xlim=c(-10,40), ylim=c(30,50))
+world(add=T)
+z=WMap[4,,13]-ref
+z=pmax(pmin(zl,z),-zl)
+quilt.plot(coordw[,1],coordw[,2],z,main=paste('E/PE',dimnames(WMap)[[1]][4],'BP'),col = rainbow(20), xlim=c(-10,40), ylim=c(30,50),nx=128,ny=128)
+world(add=T)
+# 1300 BP
+z=t(apply(data[600:700,,],c(2,3),mean,na.rm=T))     # 600:700
+image.plot(lon,lat,z,col=rainbow(20),main=paste('PDSI','1300 BP'), xlim=c(-10,40),
+           ylim=c(30,50))
+world(add=T)
+z=WMap[5,,13]-ref
+z=pmax(pmin(zl,z),-zl)
+quilt.plot(coordw[,1],coordw[,2],z,main=paste('E/PE',dimnames(WMap)[[1]][5],'BP'),col = rainbow(20), xlim=c(-10,40), ylim=c(30,50),nx=128,ny=128)
+world(add=T)
+# 1000 BP
+z=t(apply(data[900:1000,,],c(2,3),mean,na.rm=T))     # 900:1000
+image.plot(lon,lat,z,col=rainbow(20),main=paste('PDSI','1000 BP'), xlim=c(-10,40),
+           ylim=c(30,50))
+world(add=T)
+z=WMap[6,,13]-ref
+z=pmax(pmin(zl,z),-zl)
+quilt.plot(coordw[,1],coordw[,2],z,main=paste('E/PE',dimnames(WMap)[[1]][6],'BP'),col = rainbow(20), xlim=c(-10,40), ylim=c(30,50),nx=128,ny=128)
+world(add=T)
+# 700 BP
+z=t(apply(data[1250:1350,,],c(2,3),mean,na.rm=T))      # 1250:1350
+image.plot(lon,lat,z,col=rainbow(20),main=paste('PDSI','700 BP'), xlim=c(-10,40),
+           ylim=c(30,50))
+world(add=T)
+z=WMap[7,,13]-ref
+z=pmax(pmin(zl,z),-zl)
+quilt.plot(coordw[,1],coordw[,2],z,main=paste('E/PE',dimnames(WMap)[[1]][7],'BP'),col = rainbow(20), xlim=c(-10,40), ylim=c(30,50),nx=128,ny=128)
+world(add=T)
+```
